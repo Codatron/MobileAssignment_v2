@@ -7,15 +7,13 @@ public class DragDrop : MonoBehaviour
 {
     public SpriteRenderer spriteRend;
     public Transform originalPosition;
-    public Vector3 nutPosition;
+    private Hider hider;
 
     private Vector3 offset;
     private GridGenerate gridManager;
     private Camera cam;
     public bool isDragging;
-    public bool isOnTile;
-    public bool isLockedIn;
-    public int numberOfNuts = 5;
+
     public TMP_Text text;
 
     private void Start()
@@ -24,13 +22,25 @@ public class DragDrop : MonoBehaviour
 
         transform.position = originalPosition.position;
         gridManager = FindObjectOfType<GridGenerate>();
-        
+        hider = GameObject.Find("Hider").GetComponent<Hider>();
     }
 
     private void Update()
     {
         if (!isDragging)
             return;
+    }
+    public void SnapToOriginalPosition()
+    {
+        transform.position = originalPosition.position;
+    }
+
+    public Vector3 MouseWorldPosition()
+    {
+        var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0.0f;
+
+        return mousePos;
     }
 
     private void OnMouseDown()
@@ -42,7 +52,10 @@ public class DragDrop : MonoBehaviour
         BoardSpace cellWithinRange = gridManager.GetGridCellWithinRange(0.5f, MouseWorldPosition());
 
         if (cellWithinRange != null)
+        {
             cellWithinRange.isOccupied = false;
+            hider.CountObjectsToHide(-1);
+        }
     }
 
     private void OnMouseDrag()
@@ -60,9 +73,8 @@ public class DragDrop : MonoBehaviour
             if (!cellWithinRange.isOccupied)
             {
                 cellWithinRange.isOccupied = true;
+                hider.CountObjectsToHide(1);
                 transform.position = cellWithinRange.transform.position;
-
-                numberOfNuts--;
             }
             else
             {
@@ -75,18 +87,5 @@ public class DragDrop : MonoBehaviour
         }
         
         spriteRend.color = new Color(0.35f, 0.23f, 0.11f, 1f);
-    }
-
-    public void SnapToOriginalPosition()
-    {
-        transform.position = originalPosition.position;
-    }
-
-    private Vector3 MouseWorldPosition()
-    {
-        var mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        mousePos.z = 0.0f;
-
-        return mousePos;
     }
 }

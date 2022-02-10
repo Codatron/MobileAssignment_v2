@@ -40,6 +40,22 @@ public class GridGenerate : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 float dist = Vector3.Distance(grid[x, y].transform.position, mousePos);
+                
+                if (dist < distance)
+                    return grid[x, y];
+            }
+        }
+        return null;
+    }
+
+    public BoardSpace GridCellHasBeenPicked(float distance, Vector3 mousePos)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                float dist = Vector3.Distance(grid[x, y].transform.position, mousePos);
+
                 if (dist < distance)
                     return grid[x, y];
             }
