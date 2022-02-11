@@ -1,13 +1,11 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class ConfirmHiderButton : MonoBehaviour
 {
     public GameObject seeker;
-    public GameObject confirmHiderEndButton;
+    public GameObject confirmHiderButton;
 
     private BoardSpace tileSpriteRend;
 
@@ -17,7 +15,7 @@ public class UIManager : MonoBehaviour
         hider.HideObjects();
 
         GameObject[] nuts = GameObject.FindGameObjectsWithTag("Nut");
-        
+
         foreach (var nut in nuts)
         {
             // Removes box collider from game object so that it cannot be interacted with
@@ -28,10 +26,19 @@ public class UIManager : MonoBehaviour
         Debug.Log("Time to seek");
 
         seeker.SetActive(true);
-        confirmHiderEndButton.SetActive(false);
+        confirmHiderButton.SetActive(false);
 
         //TODO:
         //  - Tell grid cells to turn green again
         //  - Change color back to green when other player's turn
+
+
+        //SaveManager.Instance.gameInfo.players[0].Hidden = true;
+        //GameManager.UpdateGameState(SaveManager.Instance.gameInfo.players[0].Hidden);
+
+
+        // when joined as other player, can receive this data ONLY if we are hidden
+
+
     }
 }

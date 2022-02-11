@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -7,20 +5,21 @@ public class DragDrop : MonoBehaviour
 {
     public SpriteRenderer spriteRend;
     public Transform originalPosition;
-    private Hider hider;
+    public bool isDragging;
+    public TMP_Text text;
+    public float distanceToGridCellCenter = 0.5f;
 
-    private Vector3 offset;
+    private Hider hider;
     private GridGenerate gridManager;
     private Camera cam;
-    public bool isDragging;
-
-    public TMP_Text text;
+    private int objectValue = 1;
 
     private void Start()
     {
         cam = Camera.main;
 
         transform.position = originalPosition.position;
+
         gridManager = FindObjectOfType<GridGenerate>();
         hider = GameObject.Find("Hider").GetComponent<Hider>();
     }
@@ -46,15 +45,15 @@ public class DragDrop : MonoBehaviour
     private void OnMouseDown()
     {
         isDragging = true;
-        offset = transform.position - MouseWorldPosition();
+        Vector3 offset = transform.position - MouseWorldPosition();
         spriteRend.color = new Color(0.35f, 0.23f, 0.11f, 0.65f);
 
-        BoardSpace cellWithinRange = gridManager.GetGridCellWithinRange(0.5f, MouseWorldPosition());
+        BoardSpace cellWithinRange = gridManager.GetGridCellWithinRange(distanceToGridCellCenter, MouseWorldPosition());
 
         if (cellWithinRange != null)
         {
             cellWithinRange.isOccupied = false;
-            hider.CountObjectsToHide(-1);
+            hider.CountObjectsToHide(-objectValue);
         }
     }
 
@@ -66,14 +65,14 @@ public class DragDrop : MonoBehaviour
     private void OnMouseUp()
     {
         isDragging = false;
-        BoardSpace cellWithinRange = gridManager.GetGridCellWithinRange(0.5f, MouseWorldPosition());
+        BoardSpace cellWithinRange = gridManager.GetGridCellWithinRange(distanceToGridCellCenter, MouseWorldPosition());
         
         if (cellWithinRange != null)
         {
             if (!cellWithinRange.isOccupied)
             {
                 cellWithinRange.isOccupied = true;
-                hider.CountObjectsToHide(1);
+                hider.CountObjectsToHide(objectValue);
                 transform.position = cellWithinRange.transform.position;
             }
             else

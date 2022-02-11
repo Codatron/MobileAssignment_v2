@@ -1,12 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+public delegate void OnAllObjectsHidden();
+
 public class Hider : MonoBehaviour
 {
-    [SerializeField] List<GameObject> objects = new List<GameObject>();
+    public OnAllObjectsHidden onAllObjectsHidden;
+
+    [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
     public Button confirmButton;
     public int totalObjectsHidden;
@@ -29,6 +32,8 @@ public class Hider : MonoBehaviour
             confirmButton.interactable = true;
         else
             confirmButton.interactable = false;
+
+        //onAllObjectsHidden?.Invoke();
     }
 
     public void HideObjects()

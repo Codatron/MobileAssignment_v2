@@ -5,6 +5,7 @@ public class BoardSpace : MonoBehaviour
     SpriteRenderer spriteRend;
 
     public bool isOccupied;
+    public bool hasBeenPicked;
     public int x;
     public int y;
 
@@ -22,7 +23,7 @@ public class BoardSpace : MonoBehaviour
 
     private void Update()
     {
-        spriteRend.color = isOccupied ?  new Color(0.79f, 0.14f, 0.11f, 1f) : new Color(0.44f, 0.57f, 0.11f, 1f);
+        //spriteRend.color = isOccupied ?  new Color(0.79f, 0.14f, 0.11f, 1f) : new Color(0.44f, 0.57f, 0.11f, 1f);
 
         //TODO:
         //  - isOccupied color ONLY when hider's turn - use GameState to change?

@@ -9,7 +9,8 @@ public class SaveManager : MonoBehaviour
     private static SaveManager _instance;
     public static SaveManager Instance { get { return _instance; } }
 
-    public SaveData saveData;
+    public GameInfo gameInfo;
+    public UserGameInfo userGmaeInfo;
 
     private void Awake()
     {
@@ -26,17 +27,17 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
-        saveData = new SaveData();
+        gameInfo = new GameInfo();
+        gameInfo.players = new List<UserGameInfo>();
+        gameInfo.players.Add(new UserGameInfo());
 
         Load();
     }
 
     public void Load()
     {
-        //string json = PlayerPrefs.GetString("SaveData");
-
         string json = LoadFromFile("saveFile");
-        saveData = JsonUtility.FromJson<SaveData>(json);
+        gameInfo = JsonUtility.FromJson<GameInfo>(json);
     }
 
     public string LoadFromFile(string fileName)
@@ -48,40 +49,14 @@ public class SaveManager : MonoBehaviour
         return stream.ReadToEnd();
     }
 
-    public void SaveNameSingleP1(string name)
+    public void SaveName(string name)
     {
-        saveData.NameP1 = name;
-        string json = JsonUtility.ToJson(saveData);
-        //PlayerPrefs.SetString("SaveData", json);
-
-        SaveToFile("saveFile", json);
-    }
-    public void SaveNameMultiP1(string name)
-    {
-        saveData.NameMultiP1 = name;
-        string json = JsonUtility.ToJson(saveData);
-        //PlayerPrefs.SetString("SaveData", json);
+        gameInfo.GameName = name;
+        string json = JsonUtility.ToJson(gameInfo);
 
         SaveToFile("saveFile", json);
     }
 
-    public void SaveNameMultiP2(string name)
-    {
-        saveData.NameMultiP2 = name;
-        string json = JsonUtility.ToJson(saveData);
-        //PlayerPrefs.SetString("SaveData", json);
-
-        SaveToFile("saveFile", json);
-    }
-
-    public void SaveHighScore(int scoreToSave)
-    {
-        saveData.HighScore = scoreToSave;
-        string json = JsonUtility.ToJson(saveData);
-        //PlayerPrefs.SetString("SaveData", json);
-
-        SaveToFile("saveFile", json);
-    }
 
     public void SaveToFile(string fileName, string jsonString)
     {
