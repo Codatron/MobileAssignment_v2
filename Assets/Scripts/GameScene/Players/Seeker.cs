@@ -1,12 +1,15 @@
 using UnityEngine;
 
+public delegate void ObjectFound(int found);
 public delegate void ObjectsFound();
+public delegate void Attempts(int attempts);
 
 public class Seeker : MonoBehaviour
 {
+    public static event ObjectFound onObjectFound;
     public static event ObjectsFound onAllObjectsFound;
-    
-    public ObjectsFound allObjectsFound;
+    public static event Attempts onAttempt;
+
     private BoardSpace cellWithinRange;
     private GridGenerate gridManager;
     private DragDrop dragDrop;
@@ -60,11 +63,15 @@ public class Seeker : MonoBehaviour
                 cellWithinRange.hasBeenPicked = true;
                 CountObjectsToFound(findValue);
                 CountTotalTries(tries);
+
+                onObjectFound?.Invoke(findValue);
+                onAttempt?.Invoke(tries);
             }
             else
             {
                 cellWithinRange.hasBeenPicked = true;
                 CountTotalTries(tries);
+                onAttempt?.Invoke(tries);
             }
         }
     }

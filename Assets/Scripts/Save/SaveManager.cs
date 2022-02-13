@@ -10,7 +10,7 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { get { return _instance; } }
 
     public GameInfo gameInfo;
-    public UserGameInfo userGmaeInfo;
+    public PlayerInfo playerInfo;
 
     private void Awake()
     {
@@ -27,9 +27,14 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
-        gameInfo = new GameInfo();
-        gameInfo.players = new List<UserGameInfo>();
-        gameInfo.players.Add(new UserGameInfo());
+        // Contains game informantion such as GameName, GameID, List of Players
+        gameInfo = new GameInfo(); 
+
+        // Create List of Players
+        gameInfo.players = new List<PlayerInfo>();
+
+        // Add new Players to the List
+        gameInfo.players.Add(new PlayerInfo());
 
         Load();
     }
@@ -49,10 +54,26 @@ public class SaveManager : MonoBehaviour
         return stream.ReadToEnd();
     }
 
+    public void Save(GameObject saveObject)
+    {
+        var playerInfo = new PlayerInfo();
+
+        var component = saveObject.GetComponent<PlayerInfo>();
+
+        playerInfo.Name = component.Name;
+        playerInfo.Hidden = component.Hidden;
+        playerInfo.GridLocation = new List<Vector2Int>();
+        playerInfo.Attempts = component.Attempts;
+        playerInfo.TotalObjectsFound = component.TotalObjectsFound;
+        playerInfo.Time = component.Time;
+    }
+
     public void SaveName(string name)
     {
-        gameInfo.GameName = name;
-        string json = JsonUtility.ToJson(gameInfo);
+        //var playerInfo = new PlayerInfo();
+
+        playerInfo.Name = name;
+        string json = JsonUtility.ToJson(playerInfo.Name);
 
         SaveToFile("saveFile", json);
     }

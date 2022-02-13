@@ -28,6 +28,8 @@ public class ConfirmHiderButton : MonoBehaviour
         seeker.SetActive(true);
         confirmHiderButton.SetActive(false);
 
+        SaveManager.Instance.playerInfo.Hidden = true;
+
         //TODO:
         //  - Tell grid cells to turn green again
         //  - Change color back to green when other player's turn
@@ -37,7 +39,7 @@ public class ConfirmHiderButton : MonoBehaviour
         //GameManager.UpdateGameState(SaveManager.Instance.gameInfo.players[0].Hidden);
 
 
-        // when joined as other player, can receive this data ONLY if we are hidden
+ 
 
 
     }

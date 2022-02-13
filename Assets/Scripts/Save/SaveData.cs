@@ -7,11 +7,11 @@ public class GameInfo
 {
     public string GameName;
     public string GameID;
-    public List<UserGameInfo> players;
+    public List<PlayerInfo> players;
 }
 
 [Serializable]
-public class UserGameInfo
+public class PlayerInfo
 {
     public string Name;
     public bool Hidden;
