@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "255719947298",
+    "firebase_url": "https://mobileassignmentv2-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "mobileassignmentv2",
+    "storage_bucket": "mobileassignmentv2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255719947298:android:8b3d3ec024fc0e10315e7b",
+        "android_client_info": {
+          "package_name": "com.PoliGames.MobileAssignment_v2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255719947298-v71g7oqgu8aq6ad7bujl0ovottte999b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlYUZ9a2XV865EgMTFYru2o9z4SHsed6k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255719947298-v71g7oqgu8aq6ad7bujl0ovottte999b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

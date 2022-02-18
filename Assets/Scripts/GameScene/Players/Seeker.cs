@@ -14,7 +14,7 @@ public class Seeker : MonoBehaviour
     private GridGenerate gridManager;
     private DragDrop dragDrop;
     [SerializeField] private int maxObjectsToFind;
-    [SerializeField] private int maxTries;
+    //[SerializeField] private int maxTries;
     [SerializeField] private int findValue;
     [SerializeField] private int totalObjectsFound;
     [SerializeField] private int tries;
@@ -38,7 +38,7 @@ public class Seeker : MonoBehaviour
 
         totalTries = 0;
         tries = 1;
-        maxTries = 15;
+        //maxTries = 15;
     }
 
     private void Update()
@@ -49,7 +49,14 @@ public class Seeker : MonoBehaviour
         }
 
         if (totalObjectsFound == maxObjectsToFind)
+        {
             GameOver();
+
+            // TODO: 
+            //  - this spams the db...hwo to fix this?
+            SaveManager.Instance.SavePlayerInfo();
+            Debug.Log(SessionData.Instance.playerInGame);
+        }
     }
 
     private void SeekHiddenObjects()
@@ -61,7 +68,7 @@ public class Seeker : MonoBehaviour
             if (cellWithinRange.isOccupied && cellWithinRange.CompareTag("Tile"))
             {
                 cellWithinRange.hasBeenPicked = true;
-                CountObjectsToFound(findValue);
+                CountObjectsFound(findValue);
                 CountTotalTries(tries);
 
                 onObjectFound?.Invoke(findValue);
@@ -76,15 +83,20 @@ public class Seeker : MonoBehaviour
         }
     }
 
-    public void CountObjectsToFound(int objectFound)
+    public void CountObjectsFound(int objectFound)
     {
         totalObjectsFound += objectFound;
+
+        // make check here, if yes, call function
+        SessionData.Instance.playerInGame.totalObjectsFound++;
     }
 
     public void CountTotalTries(int tries)
     {
         totalTries += tries;
         cellWithinRange.gameObject.SetActive(false);
+
+        SessionData.Instance.playerInGame.attempts++;
     }
 
     public void GameOver()

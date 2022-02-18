@@ -3,16 +3,24 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public delegate void OnAllObjectsHidden();
+public delegate void OnAllObjectsHidden(); // make bool to trigger enable/disable in ConfirmButton class
 
 public class Hider : MonoBehaviour
 {
     public OnAllObjectsHidden onAllObjectsHidden;
+    public Button confirmButton;
+    public int totalObjectsHidden;
 
     [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
-    public Button confirmButton;
-    public int totalObjectsHidden;
+    private void OnEnable()
+    {
+        ConfirmHiderButton.onGridPlacementConfirmation += HideObjects;    
+    }
+    private void OnDisable()
+    {
+        ConfirmHiderButton.onGridPlacementConfirmation -= HideObjects;
+    }
 
     void Start()
     {
@@ -38,14 +46,18 @@ public class Hider : MonoBehaviour
 
     public void HideObjects()
     {
+        SessionData.Instance.playerInGame.gridPositions = new List<Vector3>();
+
         foreach (var nut in objects)
         {
             SpriteRenderer spriteRend = nut.GetComponent<SpriteRenderer>();
             spriteRend.sortingOrder = -1;
+
+            var position = nut.GetComponent<Transform>().position;
+            SessionData.Instance.playerInGame.gridPositions.Add(new Vector3(position.x, position.y));
         }
+
+        SessionData.Instance.playerInGame.hidden = true;
+        SaveManager.Instance.SavePlayerInfo();
     }
 }
-        // TODO: Use event delegate instead
-        //  - Tell UI button to become interactable
-        //  - Tell nuts in the list to 'hide'.
-        //  - Tell GameState to change

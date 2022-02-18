@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Firebase.Auth;
 
 public class DisplayName : MonoBehaviour
 {
@@ -9,6 +10,6 @@ public class DisplayName : MonoBehaviour
 
     void Start()
     {
-        displayName.text = "Squirrel: " + SaveManager.Instance.playerInfo.Name;
+        displayName.text = SessionData.Instance.playerInfo.name + ", hide your nuts!";
     }
 }

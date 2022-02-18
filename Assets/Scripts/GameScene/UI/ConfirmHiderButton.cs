@@ -2,45 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void OnGridPlacementConfirmation();
+
 public class ConfirmHiderButton : MonoBehaviour
 {
-    public GameObject seeker;
+    public static OnGridPlacementConfirmation onGridPlacementConfirmation;
     public GameObject confirmHiderButton;
+    public GameObject seeker;
 
     private BoardSpace tileSpriteRend;
 
     public void DoneHiding()
     {
-        Hider hider = GameObject.Find("Hider").GetComponent<Hider>();
-        hider.HideObjects();
+        // Tells hider it's time to hide objects --- should the hider also be reponsible for removing BoxColliders
+        //  instead of doing it here in l.21-29?
+        onGridPlacementConfirmation?.Invoke();
 
         GameObject[] nuts = GameObject.FindGameObjectsWithTag("Nut");
 
         foreach (var nut in nuts)
         {
-            // Removes box collider from game object so that it cannot be interacted with
             BoxCollider2D nutBox = nut.GetComponent<BoxCollider2D>();
             Destroy(nutBox);
+
+            SaveGridPosition(nut.transform.position);
         }
 
+        SaveHidden(true);
+        
         Debug.Log("Time to seek");
 
         seeker.SetActive(true);
         confirmHiderButton.SetActive(false);
 
-        SaveManager.Instance.playerInfo.Hidden = true;
 
         //TODO:
+        //  - SaveManager.Instance.gameInfo.players[0].Hidden = true;
+        //  - GameManager.UpdateGameState(SaveManager.Instance.gameInfo.players[0].Hidden);
         //  - Tell grid cells to turn green again
         //  - Change color back to green when other player's turn
+    }
 
+    private void SaveGridPosition(Vector3 gridPosition)
+    {
+        SaveManager.Instance.SavePosition(gridPosition);
+    }
 
-        //SaveManager.Instance.gameInfo.players[0].Hidden = true;
-        //GameManager.UpdateGameState(SaveManager.Instance.gameInfo.players[0].Hidden);
+    private void SaveHidden(bool isHidden)
+    {
+        SaveManager.Instance.SaveIsHidden(isHidden);
+    }
 
-
- 
-
-
+    IEnumerator DisplayPrompt()
+    {
+        yield return new WaitForSeconds(2f); 
     }
 }

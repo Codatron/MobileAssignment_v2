@@ -5,19 +5,39 @@ using System.Collections.Generic;
 [Serializable]
 public class GameInfo
 {
-    public string GameName;
-    public string GameID;
-    public List<PlayerInfo> players;
+    public string displayGameName; // Nut Hunt
+    public string gameID;   // Session #
+    public int numberOfPlayers = 2;
+    public int seed;
+    public List<PlayerInGame> players;
 }
 
 [Serializable]
 public class PlayerInfo
 {
-    public string Name;
-    public bool Hidden;
-    public List<Vector2Int> GridLocation;
-    public int Attempts;
-    public int TotalObjectsFound;
-    public float Time;
+    public string name;
+    public List<string> activeGames;
 }
-   
+
+[Serializable]
+public class PlayerInGame
+{
+    public string userID;
+    public string name;
+    public bool hidden;
+    public List<Vector3> gridPositions;
+    public int attempts;
+    public int totalObjectsFound;
+    public float time;
+}
+
+// Update List<PlayerInfo> in GameInfo 
+// - database should check if other is hidden
+//      if !isHidden
+//          not then wait for db
+//      else
+//          get other info - PLAY!
+// - send update PlayerInfo to db
+// - check other PlayerInfo
+//      if
+// 

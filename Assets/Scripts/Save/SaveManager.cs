@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Text;
+using Firebase.Database;
+using Firebase.Extensions;
 
 public class SaveManager : MonoBehaviour
 {
@@ -10,7 +12,12 @@ public class SaveManager : MonoBehaviour
     public static SaveManager Instance { get { return _instance; } }
 
     public GameInfo gameInfo;
-    public PlayerInfo playerInfo;
+    //public PlayerInGame playerInGame;
+
+    public delegate void OnLoadedDelegateMultiple(List<string> jsonData);
+    public delegate void OnLoadedDelegate(string json);
+    public delegate void OnSaveDelegate();
+    FirebaseDatabase db;
 
     private void Awake()
     {
@@ -23,25 +30,28 @@ public class SaveManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        db = FirebaseDatabase.DefaultInstance;
     }
 
     private void Start()
     {
         // Contains game informantion such as GameName, GameID, List of Players
-        gameInfo = new GameInfo(); 
+        gameInfo = new GameInfo();
 
         // Create List of Players
-        gameInfo.players = new List<PlayerInfo>();
+        gameInfo.players = new List<PlayerInGame>();
 
         // Add new Players to the List
-        gameInfo.players.Add(new PlayerInfo());
+        gameInfo.players.Add(new PlayerInGame());
 
         Load();
+
     }
 
     public void Load()
     {
-        string json = LoadFromFile("saveFile");
+        string json = LoadFromFile("SaveData.json");
         gameInfo = JsonUtility.FromJson<GameInfo>(json);
     }
 
@@ -54,30 +64,87 @@ public class SaveManager : MonoBehaviour
         return stream.ReadToEnd();
     }
 
-    public void Save(GameObject saveObject)
+    public void LoadData(string path, OnLoadedDelegate onLoadedDelegate)
     {
-        var playerInfo = new PlayerInfo();
+        db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null)
+                Debug.LogWarning(task.Exception);
 
-        var component = saveObject.GetComponent<PlayerInfo>();
+            onLoadedDelegate(task.Result.GetRawJsonValue());
+        });
+    }
 
-        playerInfo.Name = component.Name;
-        playerInfo.Hidden = component.Hidden;
-        playerInfo.GridLocation = new List<Vector2Int>();
-        playerInfo.Attempts = component.Attempts;
-        playerInfo.TotalObjectsFound = component.TotalObjectsFound;
-        playerInfo.Time = component.Time;
+    public void LoadData(string path, OnLoadedDelegateMultiple onLoadedDelegates)
+    {
+        db.RootReference.Child(path).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            List<string> loadedJson = new List<string>();
+
+            foreach (var item in task.Result.Children)
+            {
+                loadedJson.Add(item.GetRawJsonValue());
+            }
+
+            onLoadedDelegates(loadedJson);
+        });
+    }
+
+    public void SaveData(string path, string data, OnSaveDelegate onSaveDelegate = null)
+    {
+        db.RootReference.Child(path).SetRawJsonValueAsync(data).ContinueWithOnMainThread(task =>
+        {
+            if (task.Exception != null)
+                Debug.LogWarning(task.Exception);
+
+            onSaveDelegate?.Invoke();
+        });
+    }
+
+    public string GetKey(string path)
+    {
+        return db.RootReference.Child(path).Push().Key;
+    }
+
+    public void SavePlayerInfo()
+    {
+        var gameInfo = new GameInfo();
+
+        gameInfo.displayGameName = "Session 1";
+        gameInfo.gameID = "297";
+        gameInfo.players = new List<PlayerInGame>();
+
+        gameInfo.players.Add(SessionData.Instance.playerInGame);
+
+        string json = JsonUtility.ToJson(gameInfo);
+        SaveToFile("SaveData.json", json);
+
+        Debug.Log(json);
     }
 
     public void SaveName(string name)
     {
-        //var playerInfo = new PlayerInfo();
+        SessionData.Instance.playerInGame.name = name;
+        string json = JsonUtility.ToJson(SessionData.Instance.playerInGame.name);
 
-        playerInfo.Name = name;
-        string json = JsonUtility.ToJson(playerInfo.Name);
-
-        SaveToFile("saveFile", json);
+        SaveToFile("SaveData.json", json);
     }
 
+    public void SavePosition(Vector3 gridLocation)
+    {
+        SessionData.Instance.playerInGame.gridPositions.Add(gridLocation);
+        string json = JsonUtility.ToJson(SessionData.Instance.playerInGame.gridPositions);
+
+        SaveToFile("SaveData.json", json);
+    }
+
+    public void SaveIsHidden(bool isHidden)
+    {
+        SessionData.Instance.playerInGame.hidden = isHidden;
+        string json = JsonUtility.ToJson(SessionData.Instance.playerInGame.hidden);
+
+        SaveToFile("SaveData.json", json);
+    }
 
     public void SaveToFile(string fileName, string jsonString)
     {
@@ -100,4 +167,3 @@ public class SaveManager : MonoBehaviour
         }
     }
 }
-
