@@ -55,9 +55,10 @@ public class Hider : MonoBehaviour
 
             var position = nut.GetComponent<Transform>().position;
             SessionData.Instance.playerInGame.gridPositions.Add(new Vector3(position.x, position.y));
+            SessionData.SavePlayerInGameData();
         }
 
         SessionData.Instance.playerInGame.hidden = true;
-        SaveManager.Instance.SavePlayerInfo();
+        SessionData.SavePlayerInGameData();
     }
 }

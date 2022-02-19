@@ -43,19 +43,25 @@ public class SessionData : MonoBehaviour
 	{
 		if (json != null)
 		{
-			playerInGame = JsonUtility.FromJson<PlayerInGame>(json);
+			playerInfo = JsonUtility.FromJson<PlayerInfo>(json);
 		}
 
 		playerInfo ??= new PlayerInfo();
 		playerInfo.activeGames ??= new List<string>();
-		SaveData();
+		SavePlayerInfoData();
 
 		FindObjectOfType<FirebaseLogin>()?.PlayerDataLoaded();
 	}
 
-	public static void SaveData()
+	public static void SavePlayerInfoData()
 	{
 		userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-		SaveManager.Instance.SaveData(userPath, JsonUtility.ToJson(SessionData.Instance.playerInfo));    // argument in JsonUtility.ToJson was playerInGame
+		SaveManager.Instance.SaveData(userPath, JsonUtility.ToJson(SessionData.Instance.playerInfo));   
+	}
+
+	public static void SavePlayerInGameData()
+	{
+		userPath = "games/players/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+		SaveManager.Instance.SaveData(userPath, JsonUtility.ToJson(SessionData.Instance.playerInGame));  
 	}
 }

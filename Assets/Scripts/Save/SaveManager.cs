@@ -46,7 +46,6 @@ public class SaveManager : MonoBehaviour
         gameInfo.players.Add(new PlayerInGame());
 
         Load();
-
     }
 
     public void Load()
@@ -106,6 +105,7 @@ public class SaveManager : MonoBehaviour
         return db.RootReference.Child(path).Push().Key;
     }
 
+    // This is for Json
     public void SavePlayerInfo()
     {
         var gameInfo = new GameInfo();
@@ -120,6 +120,18 @@ public class SaveManager : MonoBehaviour
         SaveToFile("SaveData.json", json);
 
         Debug.Log(json);
+    }
+
+    // I want this for Firebase
+    public void SavePlayerInGameData()
+    {
+        var gameInfo = new GameInfo();
+        gameInfo.players = new List<PlayerInGame>();
+        gameInfo.players.Add(SessionData.Instance.playerInGame);
+
+        //string json = JsonUtility.ToJson(gameInfo);
+
+        SessionData.SavePlayerInGameData();
     }
 
     public void SaveName(string name)

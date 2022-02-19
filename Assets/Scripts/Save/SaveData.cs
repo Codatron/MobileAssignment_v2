@@ -7,7 +7,7 @@ public class GameInfo
 {
     public string displayGameName; // Nut Hunt
     public string gameID;   // Session #
-    public int numberOfPlayers = 2;
+    //public int numberOfPlayers = 2;
     public int seed;
     public List<PlayerInGame> players;
 }

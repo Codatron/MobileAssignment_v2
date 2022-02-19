@@ -10,13 +10,11 @@ public class SaveButtonSetup : MonoBehaviour
 
     public void SaveName()
     {
-        SessionData.Instance.playerInfo.name = inputName.text; // playerInGame.name or playerInfo.name???
-        SessionData.SaveData();
+        SessionData.Instance.playerInfo.name = inputName.text; 
+        SessionData.Instance.playerInGame.name = SessionData.Instance.playerInfo.name;
 
-        //string userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-        //string json = JsonUtility.ToJson(SessionData.playerInfo);
-
-        //SaveManager.Instance.SaveData("users/" + userPath, json);
+        SessionData.SavePlayerInfoData();
+        SessionData.SavePlayerInGameData();
     }
 }
 

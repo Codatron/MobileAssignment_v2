@@ -23,7 +23,7 @@ public class GameSelect : MonoBehaviour
 	private void UpdateGameList()
     {
         //clear/remove the old list, If we have one.
-        //EraseButtons();
+        EraseButtons();
 
         //create new list, load each of the users active games
         foreach (string gameID in SessionData.Instance.playerInfo.activeGames)
@@ -63,9 +63,7 @@ public class GameSelect : MonoBehaviour
 		newButton.GetComponentInChildren<TextMeshProUGUI>().text = gameInfo.displayGameName;
 
 		//TODO: display more game status on each button.
-
         newButton.onClick.AddListener(() => SceneController.Instance.StartGame(gameInfo));
-		Debug.Log("I'm alive!");
     }
 
 	public void CreateGame()
@@ -73,15 +71,19 @@ public class GameSelect : MonoBehaviour
 		//Create a new game and start filling out the info.
 		var newGameInfo = new GameInfo();
 		newGameInfo.seed = Random.Range(0, int.MaxValue);
-		newGameInfo.displayGameName = SessionData.Instance.playerInfo.name + "'s game";
+		newGameInfo.displayGameName = SessionData.Instance.playerInfo.name + "'s game";	// This doesn't always work
 
 		//Add the user as the first player
 		newGameInfo.players = new List<PlayerInGame>();
 
 		var newPlayerInGame = new PlayerInGame();
 		newPlayerInGame.name = SessionData.Instance.playerInfo.name;
+        newPlayerInGame.gridPositions = new List<Vector3>();
+        newPlayerInGame.hidden = false;
+        newPlayerInGame.attempts = 0;
+        newPlayerInGame.totalObjectsFound = 0;
 
-		newGameInfo.players.Add(newPlayerInGame);
+        newGameInfo.players.Add(newPlayerInGame);
 
 		//get a unique ID for the game
 		string key = SaveManager.Instance.GetKey("games/");
@@ -101,11 +103,11 @@ public class GameSelect : MonoBehaviour
 	public void GameCreated(string gameKey, GameInfo gameInfo)
 	{
 		//If we dont have any active games, create the list.
-		SessionData.Instance.playerInfo.activeGames ??= new List<string>();
+		SessionData.Instance.playerInfo.activeGames ??= new List<string>();	// This seems to not be working properly
 		SessionData.Instance.playerInfo.activeGames.Add(gameKey);
 		
 		//save our user with our new game
-		SessionData.SaveData();
+		SessionData.SavePlayerInfoData();
 
         //Start the game
         SceneController.Instance.StartGame(gameInfo);
@@ -139,7 +141,7 @@ public class GameSelect : MonoBehaviour
 		SessionData.Instance.playerInfo.activeGames.Add(gameInfo.gameID);
 
 		//save our user with our new game
-		SessionData.SaveData();
+		SessionData.SavePlayerInfoData();
 
 		gameInfo.players.Add(SessionData.Instance.playerInGame);
 

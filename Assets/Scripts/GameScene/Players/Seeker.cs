@@ -47,16 +47,6 @@ public class Seeker : MonoBehaviour
         {
             SeekHiddenObjects();
         }
-
-        if (totalObjectsFound == maxObjectsToFind)
-        {
-            GameOver();
-
-            // TODO: 
-            //  - this spams the db...hwo to fix this?
-            SaveManager.Instance.SavePlayerInfo();
-            Debug.Log(SessionData.Instance.playerInGame);
-        }
     }
 
     private void SeekHiddenObjects()
@@ -68,8 +58,8 @@ public class Seeker : MonoBehaviour
             if (cellWithinRange.isOccupied && cellWithinRange.CompareTag("Tile"))
             {
                 cellWithinRange.hasBeenPicked = true;
-                CountObjectsFound(findValue);
                 CountTotalTries(tries);
+                CountObjectsFound(findValue);
 
                 onObjectFound?.Invoke(findValue);
                 onAttempt?.Invoke(tries);
@@ -86,22 +76,38 @@ public class Seeker : MonoBehaviour
     public void CountObjectsFound(int objectFound)
     {
         totalObjectsFound += objectFound;
-
-        // make check here, if yes, call function
         SessionData.Instance.playerInGame.totalObjectsFound++;
+
+        if (totalObjectsFound == maxObjectsToFind)
+        {
+            GameOver();
+
+            //SaveManager.Instance.SavePlayerInfo();
+            SessionData.Instance.playerInGame.totalObjectsFound = totalObjectsFound;
+
+            //TODO
+            //  - 1st round, totalObjectsFound increased from 0 - 5, as it should
+            //  - if PlayAgain pressed, totalObjectsFound increases from 5 - 10
+            //  - if PlayAgain again, totalObjectsFound increases from 5 - 10, etc
+        }
     }
 
     public void CountTotalTries(int tries)
     {
         totalTries += tries;
+        SessionData.Instance.playerInGame.attempts++;
         cellWithinRange.gameObject.SetActive(false);
 
-        SessionData.Instance.playerInGame.attempts++;
+        //TODO
+        //  - remove BoxColliders from remaining unclicked boxes
+        //  - if not removed and clicked, extra attempts added in friebase at the beginning of a round
     }
 
     public void GameOver()
     {
         onAllObjectsFound?.Invoke();
+        Debug.Log(SessionData.Instance.playerInGame);
+        SessionData.SavePlayerInGameData();
     }
 }
       

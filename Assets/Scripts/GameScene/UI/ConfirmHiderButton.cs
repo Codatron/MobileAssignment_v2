@@ -50,6 +50,7 @@ public class ConfirmHiderButton : MonoBehaviour
 
     private void SaveHidden(bool isHidden)
     {
+        SessionData.SavePlayerInfoData();
         SaveManager.Instance.SaveIsHidden(isHidden);
     }
 
