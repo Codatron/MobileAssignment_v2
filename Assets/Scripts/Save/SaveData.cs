@@ -23,6 +23,7 @@ public class PlayerInfo
 public class PlayerInGame
 {
     public string userID;
+    public int playerNumber;
     public string name;
     public bool hidden;
     public List<Vector3> gridPositions;

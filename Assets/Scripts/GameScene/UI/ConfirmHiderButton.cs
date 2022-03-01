@@ -31,6 +31,7 @@ public class ConfirmHiderButton : MonoBehaviour
         SaveHidden(true);
         
         Debug.Log("Time to seek");
+        SessionData.SavePlayerInfoData();
 
         seeker.SetActive(true);
         confirmHiderButton.SetActive(false);
@@ -50,7 +51,6 @@ public class ConfirmHiderButton : MonoBehaviour
 
     private void SaveHidden(bool isHidden)
     {
-        SessionData.SavePlayerInfoData();
         SaveManager.Instance.SaveIsHidden(isHidden);
     }
 

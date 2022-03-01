@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using Firebase.Database;
 using System.Collections.Generic;
 using TMPro;
@@ -77,13 +78,15 @@ public class GameSelect : MonoBehaviour
 		newGameInfo.players = new List<PlayerInGame>();
 
 		var newPlayerInGame = new PlayerInGame();
+		newPlayerInGame.playerNumber = 0;
 		newPlayerInGame.name = SessionData.Instance.playerInfo.name;
         newPlayerInGame.gridPositions = new List<Vector3>();
         newPlayerInGame.hidden = false;
         newPlayerInGame.attempts = 0;
         newPlayerInGame.totalObjectsFound = 0;
+		newPlayerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
 
-        newGameInfo.players.Add(newPlayerInGame);
+		newGameInfo.players.Add(newPlayerInGame);
 
 		//get a unique ID for the game
 		string key = SaveManager.Instance.GetKey("games/");
@@ -143,14 +146,25 @@ public class GameSelect : MonoBehaviour
 		//save our user with our new game
 		SessionData.SavePlayerInfoData();
 
-		gameInfo.players.Add(SessionData.Instance.playerInGame);
-
 		//Update new game name
 		gameInfo.displayGameName = gameInfo.players[0].name + " vs " + SessionData.Instance.playerInfo.name;
+		
+		var newPlayerInGame = new PlayerInGame();
+		newPlayerInGame.playerNumber = 1;
+		newPlayerInGame.gridPositions = new List<Vector3>();
+		newPlayerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+		newPlayerInGame.name = SessionData.Instance.playerInfo.name;
+		newPlayerInGame.hidden = false;
+		newPlayerInGame.attempts = 0;
+		newPlayerInGame.totalObjectsFound = 0;
+
+		gameInfo.players.Add(newPlayerInGame);
 
 		string jsonString = JsonUtility.ToJson(gameInfo);
 
 		//Update the game
 		SaveManager.Instance.SaveData("games/" + gameInfo.gameID, jsonString);
+
+		SceneController.Instance.StartGame(gameInfo);
 	}
 }

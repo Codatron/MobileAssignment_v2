@@ -14,7 +14,7 @@ public class SaveButtonSetup : MonoBehaviour
         SessionData.Instance.playerInGame.name = SessionData.Instance.playerInfo.name;
 
         SessionData.SavePlayerInfoData();
-        SessionData.SavePlayerInGameData();
+        //SessionData.SavePlayerInGameData();
     }
 }
 

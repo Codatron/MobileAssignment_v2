@@ -32,6 +32,7 @@ public class SaveManager : MonoBehaviour
         }
 
         db = FirebaseDatabase.DefaultInstance;
+        FirebaseDatabase.DefaultInstance.SetPersistenceEnabled(false);
     }
 
     private void Start()
@@ -109,11 +110,9 @@ public class SaveManager : MonoBehaviour
     public void SavePlayerInfo()
     {
         var gameInfo = new GameInfo();
-
         gameInfo.displayGameName = "Session 1";
         gameInfo.gameID = "297";
         gameInfo.players = new List<PlayerInGame>();
-
         gameInfo.players.Add(SessionData.Instance.playerInGame);
 
         string json = JsonUtility.ToJson(gameInfo);

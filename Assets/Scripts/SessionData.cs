@@ -7,7 +7,6 @@ public class SessionData : MonoBehaviour
 	private static SessionData _instance;
 	public static SessionData Instance { get { return _instance; } }
 
-	public GameInfo gameInfo;
 	public PlayerInfo playerInfo;
 	public PlayerInGame playerInGame;
 	static string userPath;
@@ -31,6 +30,15 @@ public class SessionData : MonoBehaviour
 		userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
 
 		playerInGame = new PlayerInGame();
+		playerInGame.name = "Error, Im not in this game?";
+		foreach (var player in SaveManager.Instance.gameInfo.players)
+        {
+            if (player.userID == FirebaseAuth.DefaultInstance.CurrentUser.UserId)
+            {
+				playerInGame = player;
+				Debug.Log("our ID:" + playerInGame.userID);
+			}
+        }
 	}
 
 	void OnSignIn()
@@ -55,13 +63,19 @@ public class SessionData : MonoBehaviour
 
 	public static void SavePlayerInfoData()
 	{
-		userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+		SessionData.Instance.playerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+
+        userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
 		SaveManager.Instance.SaveData(userPath, JsonUtility.ToJson(SessionData.Instance.playerInfo));   
 	}
 
 	public static void SavePlayerInGameData()
 	{
-		userPath = "games/players/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-		SaveManager.Instance.SaveData(userPath, JsonUtility.ToJson(SessionData.Instance.playerInGame));  
+		SessionData.Instance.playerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+
+        SaveManager.Instance.gameInfo.players[SessionData.Instance.playerInGame.playerNumber] = SessionData.Instance.playerInGame;
+
+        string gamePath = "games/" + SaveManager.Instance.gameInfo.gameID;
+		SaveManager.Instance.SaveData(gamePath, JsonUtility.ToJson(SaveManager.Instance.gameInfo));
 	}
 }

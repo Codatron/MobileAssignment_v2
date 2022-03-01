@@ -10,6 +10,6 @@ public class DisplayGameName : MonoBehaviour
 
     void Start()
     {
-        displayGameName.text = "Nut Hunt: " + SessionData.Instance.gameInfo.displayGameName;
+        displayGameName.text = "Nut Hunt: " + SaveManager.Instance.gameInfo.displayGameName; // Was SessionData.blahblah...
     }
 }
