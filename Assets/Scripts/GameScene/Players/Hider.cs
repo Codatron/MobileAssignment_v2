@@ -3,11 +3,11 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public delegate void OnAllObjectsHidden(); // make bool to trigger enable/disable in ConfirmButton class
+public delegate void OnAllObjectsHidden(bool amReady); // make bool to trigger enable/disable in ConfirmButton class
 
 public class Hider : MonoBehaviour
 {
-    public OnAllObjectsHidden onAllObjectsHidden;
+    public static OnAllObjectsHidden onAllObjectsHidden;
     public Button confirmButton;
     public int totalObjectsHidden;
 
@@ -60,5 +60,7 @@ public class Hider : MonoBehaviour
 
         SessionData.Instance.playerInGame.hidden = true;
         SessionData.SavePlayerInGameData();
+
+        onAllObjectsHidden?.Invoke(true);
     }
 }

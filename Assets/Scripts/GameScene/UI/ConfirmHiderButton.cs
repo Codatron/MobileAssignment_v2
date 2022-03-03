@@ -33,7 +33,9 @@ public class ConfirmHiderButton : MonoBehaviour
         Debug.Log("Time to seek");
         SessionData.SavePlayerInfoData();
 
-        seeker.SetActive(true);
+        // This turns on the seeker component attached to the Seeker game object in the hierarchy
+        //seeker.SetActive(true);
+
         confirmHiderButton.SetActive(false);
 
 

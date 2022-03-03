@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 {
     public static OnOpponentInfoLoaded onOpponentInfoLoaded;
     public UnityEvent<GameState> OnGameStateChange;
-    public UIManager UIManager;
+    //public UIManager UIManager;
 
     public GameState statePlayer1; // hide, seek, or game over
     public GameState statePlayer2; // hide, seek, or game over
@@ -33,16 +33,29 @@ public class GameManager : MonoBehaviour
     {
         if (OnGameStateChange == null)
             OnGameStateChange = new OnGameStateChange();
+
+        Hider.onAllObjectsHidden += UpdateGameState;
+    }
+
+    void Update()
+    {
+        //UpdateGameState();
     }
 
     public static void UpdateGameState(bool saveUpdate)
     {
-        if (SaveManager.Instance.gameInfo.players[0].hidden)
+        if (saveUpdate)
         {
+            Debug.Log("I'm ready.");
+
+            if (SessionData.Instance.playerInGame.playerNumber == 1)
+            {
+
+            }
             // Get p2 info - name and grid locations;
-            LoadOpponentName();
-            LoadOpponentGridLocations();
-            onOpponentInfoLoaded?.Invoke();
+            //LoadOpponentName();
+            //LoadOpponentGridLocations();
+            //onOpponentInfoLoaded?.Invoke();
         }
        
     }

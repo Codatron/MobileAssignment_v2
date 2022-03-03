@@ -27,10 +27,15 @@ public class SessionData : MonoBehaviour
 	private void Start()
 	{
 		FindObjectOfType<FirebaseLogin>().OnSignIn += OnSignIn;
-		userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+
+		if (FirebaseAuth.DefaultInstance.CurrentUser.UserId == null)
+			return;
+		else
+			userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
 
 		playerInGame = new PlayerInGame();
-		playerInGame.name = "Error, Im not in this game?";
+		playerInGame.name = "Error, Im not in this game? SessionData cs.37";
+
 		foreach (var player in SaveManager.Instance.gameInfo.players)
         {
             if (player.userID == FirebaseAuth.DefaultInstance.CurrentUser.UserId)
