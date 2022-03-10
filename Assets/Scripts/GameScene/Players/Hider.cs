@@ -55,12 +55,17 @@ public class Hider : MonoBehaviour
 
             var position = nut.GetComponent<Transform>().position;
             SessionData.Instance.playerInGame.gridPositions.Add(new Vector3(position.x, position.y));
-            SessionData.SavePlayerInGameData();
+
+            BoxCollider2D nutBox = nut.GetComponent<BoxCollider2D>();
+            Destroy(nutBox);
         }
 
         SessionData.Instance.playerInGame.hidden = true;
+        SessionData.SavePlayerInfoData();
         SessionData.SavePlayerInGameData();
 
         onAllObjectsHidden?.Invoke(true);
+
+        Debug.Log("Time to seek");
     }
 }

@@ -23,4 +23,9 @@ public class WaitPanel : MonoBehaviour
         waitPanel.SetActive(true);
     }
 
+    private void HideWaitPanel(bool isOtherPlayerReady)
+    {
+        waitPanel.SetActive(false);
+    }
+
 }
