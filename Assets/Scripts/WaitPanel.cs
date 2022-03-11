@@ -7,16 +7,16 @@ public class WaitPanel : MonoBehaviour
 {
     public GameObject waitPanel;
 
-    void Awake()
-    {
-        Hider.onAllObjectsHidden += RevealWaitPanel;
-        waitPanel.SetActive(false);
-    }
+    //void Awake()
+    //{
+    //    Hider.onAllObjectsHidden += RevealWaitPanel;
+    //    waitPanel.SetActive(false);
+    //}
 
-    void OnDisable()
-    {
-        Hider.onAllObjectsHidden -= RevealWaitPanel;
-    }
+    //void OnDisable()
+    //{
+    //    Hider.onAllObjectsHidden -= RevealWaitPanel;
+    //}
 
     private void RevealWaitPanel(bool amReady)
     {

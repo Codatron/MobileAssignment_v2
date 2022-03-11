@@ -28,6 +28,7 @@ public class PlayerInGame
     public bool hidden;
     public List<Vector3> gridPositions;
     public int attempts;
+    public bool allObjectsFound;
     public int totalObjectsFound;
     public float time;
 }

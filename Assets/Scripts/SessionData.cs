@@ -34,7 +34,7 @@ public class SessionData : MonoBehaviour
 			userPath = "users/" + FirebaseAuth.DefaultInstance.CurrentUser.UserId;
 
 		playerInGame = new PlayerInGame();
-		playerInGame.name = "Error, Im not in this game? SessionData cs.37";
+		//playerInGame.name = "Error, Im not in this game? SessionData cs.37";
 
 		foreach (var player in SaveManager.Instance.gameInfo.players)
         {
@@ -78,7 +78,10 @@ public class SessionData : MonoBehaviour
 	{
 		SessionData.Instance.playerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
 
-        SaveManager.Instance.gameInfo.players[SessionData.Instance.playerInGame.playerNumber] = SessionData.Instance.playerInGame;
+		Debug.Log(SessionData.Instance.playerInGame.playerNumber);
+	
+
+		SaveManager.Instance.gameInfo.players[SessionData.Instance.playerInGame.playerNumber] = SessionData.Instance.playerInGame;
 
         string gamePath = "games/" + SaveManager.Instance.gameInfo.gameID;
 		SaveManager.Instance.SaveData(gamePath, JsonUtility.ToJson(SaveManager.Instance.gameInfo));

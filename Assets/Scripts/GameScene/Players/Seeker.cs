@@ -84,6 +84,7 @@ public class Seeker : MonoBehaviour
 
             //SaveManager.Instance.SavePlayerInfo();
             SessionData.Instance.playerInGame.totalObjectsFound = totalObjectsFound;
+            SessionData.SavePlayerInGameData();
 
             //TODO
             //  - 1st round, totalObjectsFound increased from 0 - 5, as it should
@@ -96,6 +97,7 @@ public class Seeker : MonoBehaviour
     {
         totalTries += tries;
         SessionData.Instance.playerInGame.attempts++;
+        SessionData.SavePlayerInGameData();
         cellWithinRange.gameObject.SetActive(false);
 
         //TODO
@@ -105,6 +107,7 @@ public class Seeker : MonoBehaviour
 
     public void GameOver()
     {
+        SessionData.Instance.playerInGame.allObjectsFound = true;
         onAllObjectsFound?.Invoke();
         Debug.Log(SessionData.Instance.playerInGame);
         SessionData.SavePlayerInGameData();

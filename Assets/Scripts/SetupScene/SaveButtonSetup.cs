@@ -8,22 +8,19 @@ public class SaveButtonSetup : MonoBehaviour
 {
     public TMP_InputField inputName;
 
+    private void Start()
+    {
+        // Displays the player's last chosen name in the text field
+        if (SessionData.Instance.playerInGame.userID == FirebaseAuth.DefaultInstance.CurrentUser.UserId)
+        {
+            inputName.text = SessionData.Instance.playerInfo.name;
+        }
+    }
+
     public void SaveName()
     {
         SessionData.Instance.playerInfo.name = inputName.text; 
-
-        //if (SessionData.Instance.playerInGame.userID == FirebaseAuth.DefaultInstance.CurrentUser.UserId)
-        //{
-
-        //}
-
         SessionData.Instance.playerInGame.name = SessionData.Instance.playerInfo.name;
-
         SessionData.SavePlayerInfoData();
-        //SessionData.SavePlayerInGameData();
     }
 }
-
-        //SaveManager.Instance.SavePlayerInfo();
-        // Old way
-        //SaveManager.Instance.SaveName(inputName.text);

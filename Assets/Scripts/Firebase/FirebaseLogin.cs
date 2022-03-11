@@ -116,9 +116,6 @@ public class FirebaseLogin : MonoBehaviour
 
 	public void PlayerDataLoaded()
 	{
-		//TODO: In final version we will load next scene directly
-
-		//Activate the play button once we have logged in
 		playButton.interactable = true;
 	}
 }

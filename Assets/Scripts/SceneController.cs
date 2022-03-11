@@ -1,3 +1,4 @@
+using Firebase.Auth;
 using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,6 +31,16 @@ public class SceneController : MonoBehaviour
     internal void StartGame(GameInfo gameInfo)
     {
         SaveManager.Instance.gameInfo = gameInfo;
+
+        if (SaveManager.Instance.gameInfo.players[0].userID == FirebaseAuth.DefaultInstance.CurrentUser.UserId)
+        {
+            SessionData.Instance.playerInGame = gameInfo.players[0];
+        }
+        else if (SaveManager.Instance.gameInfo.players[1].userID == FirebaseAuth.DefaultInstance.CurrentUser.UserId)
+        {
+            SessionData.Instance.playerInGame = gameInfo.players[1];
+        }
+
         SceneManager.LoadScene("Game");
     }
 }

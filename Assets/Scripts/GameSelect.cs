@@ -157,6 +157,7 @@ public class GameSelect : MonoBehaviour
 		newPlayerInGame.hidden = false;
 		newPlayerInGame.attempts = 0;
 		newPlayerInGame.totalObjectsFound = 0;
+		SessionData.Instance.playerInGame = newPlayerInGame;
 
 		gameInfo.players.Add(newPlayerInGame);
 

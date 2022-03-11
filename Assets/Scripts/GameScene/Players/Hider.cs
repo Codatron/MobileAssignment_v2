@@ -11,7 +11,7 @@ public class Hider : MonoBehaviour
     public Button confirmButton;
     public int totalObjectsHidden;
 
-    [SerializeField] private List<GameObject> objects = new List<GameObject>();
+    public List<GameObject> objects = new List<GameObject>();
 
     private void OnEnable()
     {
@@ -46,6 +46,7 @@ public class Hider : MonoBehaviour
 
     public void HideObjects()
     {
+
         SessionData.Instance.playerInGame.gridPositions = new List<Vector3>();
 
         foreach (var nut in objects)
@@ -66,6 +67,6 @@ public class Hider : MonoBehaviour
 
         onAllObjectsHidden?.Invoke(true);
 
-        Debug.Log("Time to seek");
+        Debug.Log(SessionData.Instance.playerInGame.name + ", time to seek");
     }
 }
