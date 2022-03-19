@@ -46,7 +46,6 @@ public class Hider : MonoBehaviour
 
     public void HideObjects()
     {
-
         SessionData.Instance.playerInGame.gridPositions = new List<Vector3>();
 
         foreach (var nut in objects)
@@ -63,9 +62,11 @@ public class Hider : MonoBehaviour
 
         SessionData.Instance.playerInGame.hidden = true;
         SessionData.SavePlayerInfoData();
+
+
         SessionData.SavePlayerInGameData();
 
-        onAllObjectsHidden?.Invoke(true);
+        onAllObjectsHidden?.Invoke(true);   // Enables WaitPanel.cs
 
         Debug.Log(SessionData.Instance.playerInGame.name + ", time to seek");
     }

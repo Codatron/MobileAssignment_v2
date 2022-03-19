@@ -1,29 +1,34 @@
 using UnityEngine;
 
 public delegate void ObjectFound(int found);
-public delegate void ObjectsFound();
+//public delegate void ObjectsFound();
 public delegate void Attempts(int attempts);
 
 public class Seeker : MonoBehaviour
 {
     public static event ObjectFound onObjectFound;
-    public static event ObjectsFound onAllObjectsFound;
+    //public static event ObjectsFound onAllObjectsFound;
     public static event Attempts onAttempt;
+    public bool isGameOver;
 
     private BoardSpace cellWithinRange;
     private GridGenerate gridManager;
     private DragDrop dragDrop;
     [SerializeField] private int maxObjectsToFind;
-    //[SerializeField] private int maxTries;
     [SerializeField] private int findValue;
     [SerializeField] private int totalObjectsFound;
     [SerializeField] private int tries;
     [SerializeField] private int totalTries;
 
-    //public int findValue;
-    //public int totalObjectsFound;
-    //public int tries;
-    //public int totalTries;
+    void OnAwake()
+    {
+        TurnManager.onAllObjectsFound += GameOver;
+    }
+
+    void OnDestroy()
+    {
+        TurnManager.onAllObjectsFound -= GameOver;
+    }
 
     void Start()
     {
@@ -38,14 +43,16 @@ public class Seeker : MonoBehaviour
 
         totalTries = 0;
         tries = 1;
-        //maxTries = 15;
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonUp(0))
+        if (!isGameOver)
         {
-            SeekHiddenObjects();
+            if (Input.GetMouseButtonUp(0))
+            {
+                SeekHiddenObjects();
+            }
         }
     }
 
@@ -82,34 +89,26 @@ public class Seeker : MonoBehaviour
         {
             GameOver();
 
-            //SaveManager.Instance.SavePlayerInfo();
             SessionData.Instance.playerInGame.totalObjectsFound = totalObjectsFound;
             SessionData.SavePlayerInGameData();
-
-            //TODO
-            //  - 1st round, totalObjectsFound increased from 0 - 5, as it should
-            //  - if PlayAgain pressed, totalObjectsFound increases from 5 - 10
-            //  - if PlayAgain again, totalObjectsFound increases from 5 - 10, etc
         }
     }
 
     public void CountTotalTries(int tries)
     {
         totalTries += tries;
-        SessionData.Instance.playerInGame.attempts++;
-        SessionData.SavePlayerInGameData();
         cellWithinRange.gameObject.SetActive(false);
 
-        //TODO
-        //  - remove BoxColliders from remaining unclicked boxes
-        //  - if not removed and clicked, extra attempts added in friebase at the beginning of a round
+        SessionData.Instance.playerInGame.attempts++;
+        SessionData.SavePlayerInGameData();
     }
 
     public void GameOver()
     {
+        //onAllObjectsFound?.Invoke();
+        isGameOver = true;
+
         SessionData.Instance.playerInGame.allObjectsFound = true;
-        onAllObjectsFound?.Invoke();
-        Debug.Log(SessionData.Instance.playerInGame);
         SessionData.SavePlayerInGameData();
     }
 }

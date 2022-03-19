@@ -76,10 +76,7 @@ public class SessionData : MonoBehaviour
 
 	public static void SavePlayerInGameData()
 	{
-		SessionData.Instance.playerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-
-		Debug.Log(SessionData.Instance.playerInGame.playerNumber);
-	
+		SessionData.Instance.playerInGame.userID = FirebaseAuth.DefaultInstance.CurrentUser.UserId;	
 
 		SaveManager.Instance.gameInfo.players[SessionData.Instance.playerInGame.playerNumber] = SessionData.Instance.playerInGame;
 

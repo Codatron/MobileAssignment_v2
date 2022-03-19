@@ -7,23 +7,25 @@ public class WaitPanel : MonoBehaviour
 {
     public GameObject waitPanel;
 
-    //void Awake()
-    //{
-    //    Hider.onAllObjectsHidden += RevealWaitPanel;
-    //    waitPanel.SetActive(false);
-    //}
+    void Awake()
+    {
+        Hider.onAllObjectsHidden += RevealWaitPanel;
+        TurnManager.onGameStart += HideWaitPanel;
+        waitPanel.SetActive(false);
+    }
 
-    //void OnDisable()
-    //{
-    //    Hider.onAllObjectsHidden -= RevealWaitPanel;
-    //}
+    void OnDisable()
+    {
+        Hider.onAllObjectsHidden -= RevealWaitPanel;
+        TurnManager.onGameStart -= HideWaitPanel;
+    }
 
     private void RevealWaitPanel(bool amReady)
     {
         waitPanel.SetActive(true);
     }
 
-    private void HideWaitPanel(bool isOtherPlayerReady)
+    private void HideWaitPanel()
     {
         waitPanel.SetActive(false);
     }

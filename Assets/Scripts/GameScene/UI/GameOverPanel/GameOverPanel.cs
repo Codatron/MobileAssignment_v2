@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameOverPanel : MonoBehaviour
 {
@@ -8,12 +9,15 @@ public class GameOverPanel : MonoBehaviour
 
     private void OnEnable()
     {
-        Seeker.onAllObjectsFound += RevealGameOverPanel;
+        TurnManager.onAllObjectsFound += RevealGameOverPanel;
+        //Seeker.onAllObjectsFound += RevealGameOverPanel;
     }
 
     private void OnDisable()
     {
-        Seeker.onAllObjectsFound -= RevealGameOverPanel;
+        TurnManager.onAllObjectsFound -= RevealGameOverPanel;
+
+        //Seeker.onAllObjectsFound -= RevealGameOverPanel;
     }
 
     void Start()
